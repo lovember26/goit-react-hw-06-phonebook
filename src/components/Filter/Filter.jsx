@@ -1,6 +1,15 @@
-import PropTypes from 'prop-types';
 import { Form, Input } from 'components/ContactForm/ContactForm.styled';
-export default function Filter({ handleFilter, value }) {
+import { useDispatch, useSelector } from 'react-redux';
+import { setFilter } from 'redux/filterSlice';
+import { getFilter } from 'redux/selectors';
+
+export default function Filter() {
+  const value = useSelector(getFilter);
+
+  const dispatch = useDispatch();
+  const handleFilter = ({ target }) => {
+    dispatch(setFilter(target.value));
+  };
   return (
     <Form>
       <label htmlFor="filter">Find contacts by name</label>
@@ -14,7 +23,3 @@ export default function Filter({ handleFilter, value }) {
     </Form>
   );
 }
-Filter.propTypes = {
-  handleFilter: PropTypes.func.isRequired,
-  value: PropTypes.string.isRequired,
-};

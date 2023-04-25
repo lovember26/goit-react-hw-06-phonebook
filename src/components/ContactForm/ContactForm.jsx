@@ -1,10 +1,14 @@
-import PropTypes from 'prop-types';
 import { Form, Button, Input } from './ContactForm.styled';
+import { useDispatch, useSelector } from 'react-redux';
 import { useState } from 'react';
+import { addContact } from 'redux/contactsSlice';
+import { getContacts } from 'redux/selectors';
 
-export const ContactForm = ({ createContact }) => {
+export const ContactForm = () => {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
+  const contacts = useSelector(getContacts);
+  const dispatch = useDispatch();
 
   const handleChange = ({ target }) => {
     switch (target.name) {
@@ -20,7 +24,11 @@ export const ContactForm = ({ createContact }) => {
   };
   const handleSubmit = e => {
     e.preventDefault();
-    createContact({ name, number });
+    if (contacts.find(contact => contact.name === name)) {
+      alert('This contact is already in phonebook!');
+    } else {
+      dispatch(addContact(name, number));
+    }
     setName('');
     setNumber('');
   };
@@ -52,8 +60,4 @@ export const ContactForm = ({ createContact }) => {
       <Button type="submit">Add contact</Button>
     </Form>
   );
-};
-
-ContactForm.propTypes = {
-  createContact: PropTypes.func.isRequired,
 };
